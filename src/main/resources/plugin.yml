@@ -1,0 +1,21 @@
+name: VoteSleep
+version: '${project.version}'
+main: com.notryden.votesleep.Main
+api-version: 1.18
+authors: [ NOTrYDEN ]
+description: Do you want to sleep? Call a vote and see if a majority of others do as well!
+website: https://notryden.com
+
+commands:
+  vs:
+    description: Vote to sleep!
+    usage: /<command>
+  vsbroadcast:
+    description: Broadcasts VoteSleep.
+    usage: /<command>
+  vsaccept:
+    description: Accept vote to sleep.
+    usage: /<command>
+  vsdeny:
+    description: Deny vote to sleep.
+    usage: /<command>
