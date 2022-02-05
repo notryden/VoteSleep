@@ -10,23 +10,21 @@ import java.util.*;
 
 public class VoteSleep {
     public static Map<String, Boolean> playerListVoted = new HashMap<>();
-    static boolean votePassed;
+    static boolean hasVotePassed;
     static int playerAcceptCount = 0;
     static int playerPassedCountMax = getPlayerCount();
     static int playerPassedCountMin = (int) Math.ceil((playerPassedCountMax + 1) * 0.5);
-    static int possibleSubtraction = -(playerPassedCountMin % 2); // because even numbers of players exist
     static int playerDenyCount = 0;
 
 
     public static void accept(String uuid) {
         Player player = Bukkit.getPlayer(UUID.fromString(uuid));
+        System.out.println(player);
         playerListVoted.put(uuid, false);
-        if (!playerListVoted.get(uuid) && CommandVS.getActive()) {
+        if (!playerListVoted.get(uuid) && CommandVS.getActive() && !hasVotePassed) {
             if (!playerListVoted.get(uuid))
                 playerListVoted.put(uuid, Boolean.TRUE);
             playerAcceptCount++;
-            System.out.println(playerPassedCountMax);
-            System.out.println(playerPassedCountMin);
             assert player != null;
             player.sendMessage(ChatColor.AQUA + "Vote submitted.");
             Bukkit.broadcastMessage(
@@ -37,12 +35,20 @@ public class VoteSleep {
             System.out.println(!(playerListVoted.get(uuid)));
             System.out.println(playerListVoted);
             if (playerAcceptCount == playerPassedCountMin) {
+                CommandVS.setActive(false);
+                progressDay(Bukkit.getServer());
                 playerListVoted.clear();
                 Bukkit.broadcastMessage(ChatColor.GREEN + "Vote has passed!");
                 playerAcceptCount = 0;
+                playerDenyCount = 0;
+            } else if (playerDenyCount >= playerPassedCountMin) {
                 CommandVS.setActive(false);
+                playerListVoted.clear();
+                Bukkit.broadcastMessage(ChatColor.RED + "Vote has not passed.");
+                playerAcceptCount = 0;
+                playerDenyCount = 0;
             }
-            finalizeVote();
+            finalizeVote(true);
         } else if (!CommandVS.getActive()) {
             assert player != null;
             player.sendMessage(ChatColor.DARK_RED + "You have already voted!");
@@ -55,7 +61,7 @@ public class VoteSleep {
     public static void deny(String uuid) {
         Player player = Bukkit.getPlayer(UUID.fromString(uuid));
         playerListVoted.put(uuid, false);
-        if (!playerListVoted.get(uuid) && CommandVS.getActive()) {
+        if (!playerListVoted.get(uuid) && CommandVS.getActive() && !hasVotePassed) {
             if (!playerListVoted.get(uuid))
                 playerListVoted.put(uuid, Boolean.TRUE);
             playerDenyCount++;
@@ -66,13 +72,13 @@ public class VoteSleep {
                 +  ChatColor.RED + playerDenyCount + ChatColor.RESET + "/" +
                 ChatColor.LIGHT_PURPLE + playerPassedCountMax);
             System.out.println(playerListVoted);
-            if (playerDenyCount == playerPassedCountMin + possibleSubtraction) {
-                playerListVoted.clear();
-                Bukkit.broadcastMessage(ChatColor.GREEN + "Vote has passed!");
-                playerDenyCount = 0;
+            if (playerDenyCount == playerPassedCountMin) {
                 CommandVS.setActive(false);
+                playerListVoted.clear();
+                Bukkit.broadcastMessage(ChatColor.YELLOW + "Vote has not passed.");
+                playerDenyCount = 0;
             }
-            finalizeVote();
+            finalizeVote(false);
         } else if (!CommandVS.getActive()){
             assert player != null;
             player.sendMessage(ChatColor.DARK_RED + "You have already voted!");
@@ -82,20 +88,23 @@ public class VoteSleep {
             player.sendMessage(ChatColor.DARK_RED + "Vote has not started!");
         }
     }
-    public static void finalizeVote() {
-        if (playerAcceptCount >= playerPassedCountMin) {
-            votePassed = true;
-            progressDay(Bukkit.getServer());
-            votePassed = false;
+    public static void finalizeVote(boolean b) {
+        if (b) {
+            if (playerAcceptCount >= playerPassedCountMin) {
+                hasVotePassed = true;
+                progressDay(Bukkit.getServer());
+                System.out.println("it worked");
+                hasVotePassed = false;
+            }
         }
-        else if (playerDenyCount >= playerPassedCountMin + possibleSubtraction) {
-            votePassed = false;
-            Bukkit.getLogger().info("Vote did not pass!");
-        }
-        if (!CommandVS.getActive()) {
+        if (!b) {
+            if (playerDenyCount >= playerPassedCountMin) {
+                hasVotePassed = false;
+                Bukkit.getLogger().info("Vote did not pass!");
+            }
+        } else if (!CommandVS.getActive()) {
             playerAcceptCount = 0;
             playerDenyCount = 0;
-            progressDay(Bukkit.getServer());
         }
     }
     public static void progressDay(Server s) {
@@ -109,8 +118,5 @@ public class VoteSleep {
     }
     public static long getTime() {
         return Objects.requireNonNull(Bukkit.getServer().getWorld("world")).getTime();
-    }
-    public static boolean isVotesWhole() {
-        return playerAcceptCount + playerDenyCount == playerPassedCountMax;
     }
 }

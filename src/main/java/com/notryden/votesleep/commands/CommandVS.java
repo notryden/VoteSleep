@@ -14,7 +14,6 @@ import org.bukkit.entity.Player;
 
 public class CommandVS implements CommandExecutor {
     private static boolean active = false;
-//    static boolean voteStarted = false;
 
 
     @Override
@@ -25,7 +24,7 @@ public class CommandVS implements CommandExecutor {
                 return true;
             } else if (VoteSleep.getTime() >= 13000 && !getActive()) {
                 Player player = (Player) sender;
-                TextComponent vsMessage = new TextComponent("Click to begin sleeping vote!\n");
+                TextComponent vsMessage = new TextComponent("Click to begin sleeping vote!");
                 vsMessage.setBold(true);
                 vsMessage.setColor(ChatColor.GOLD);
                 vsMessage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/vsbroadcast"));
@@ -35,7 +34,7 @@ public class CommandVS implements CommandExecutor {
                 setActive(true);
                 return true;
             } else if (VoteSleep.getTime() < 13000) {
-                sender.sendMessage(ChatColor.DARK_RED + "To start a vote, the time must be at least night (13000).");
+                sender.sendMessage(ChatColor.DARK_RED + "\nTo start a vote, the time must be at least night (13000).");
                 return true;
             } else if (getActive()) {
                 sender.sendMessage(ChatColor.DARK_RED + "A vote has already started!");

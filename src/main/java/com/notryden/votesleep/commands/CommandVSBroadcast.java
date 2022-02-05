@@ -13,13 +13,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class CommandVSBroadcast implements CommandExecutor  {
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (label.equalsIgnoreCase("vsbroadcast") && VoteSleep.getTime() >= 13000) {
             if (sender instanceof Player) {
+                Player player = (Player) sender;
                 CommandVS.setActive(true);
                 TextComponent acceptMessage = new TextComponent(
-                        ChatColor.GREEN + "ACCEPT\n" + ChatColor.RESET + " (click or use /vsaccept)\n"
+                        ChatColor.GREEN + "\nACCEPT\n" + ChatColor.RESET + " (click or use /vsaccept)\n"
                 );
                 TextComponent denyMessage = new TextComponent(
                         ChatColor.RED + "DENY\n" + ChatColor.RESET + " (click or use /vsdeny)"
@@ -32,11 +34,14 @@ public class CommandVSBroadcast implements CommandExecutor  {
                 denyMessage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/vsdeny"));
                 denyMessage.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                         new ComponentBuilder("Click to deny vote").bold(true).create()));
-                Bukkit.getServer().spigot().broadcast(acceptMessage);
-                Bukkit.getServer().spigot().broadcast(denyMessage);
+
+                player.spigot().sendMessage(acceptMessage);
+                player.spigot().sendMessage(denyMessage);
+
                 return true;
-            } else {
+            } else if (!(sender instanceof Player)) {
                 Bukkit.getLogger().warning("The server console cannot vote.");
+                return true;
             }
             if (!CommandVS.getActive()) {
                 TextComponent activeError = new TextComponent("You cannot use this command without first starting a vote.");
@@ -46,6 +51,6 @@ public class CommandVSBroadcast implements CommandExecutor  {
                 return true;
             }
         }
-        return false;
+        return true;
     }
 }
