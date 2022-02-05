@@ -1,6 +1,6 @@
 package com.notryden.votesleep.commands;
 
-import com.notryden.votesleep.VoteSleep;
+import com.notryden.votesleep.Voting;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -16,7 +16,7 @@ public class CommandVSBroadcast implements CommandExecutor  {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (label.equalsIgnoreCase("vsbroadcast") && VoteSleep.getTime() >= 13000) {
+        if (label.equalsIgnoreCase("vsbroadcast") && Voting.getTime() >= 13000) {
             if (sender instanceof Player) {
                 Player player = (Player) sender;
                 CommandVS.setActive(true);

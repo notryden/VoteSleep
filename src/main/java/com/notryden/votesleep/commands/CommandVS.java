@@ -1,6 +1,6 @@
 package com.notryden.votesleep.commands;
 
-import com.notryden.votesleep.VoteSleep;
+import com.notryden.votesleep.Voting;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -21,7 +21,7 @@ public class CommandVS implements CommandExecutor {
             if (!(sender instanceof Player)) {
                 Bukkit.getLogger().warning("The server console cannot vote.");
                 return true;
-            } else if (VoteSleep.getTime() >= 13000 && !getActive()) {
+            } else if (Voting.getTime() >= 13000 && !getActive()) {
                 Player player = (Player) sender;
                 TextComponent vsMessage = new TextComponent("Click to begin sleeping vote!");
                 vsMessage.setBold(true);
@@ -32,7 +32,7 @@ public class CommandVS implements CommandExecutor {
                 Bukkit.getServer().spigot().broadcast(vsMessage);
                 setActive(true);
                 return true;
-            } else if (VoteSleep.getTime() < 13000) {
+            } else if (Voting.getTime() < 13000) {
                 sender.sendMessage(ChatColor.DARK_RED + "\nTo start a vote, the time must be at least night (13000).");
                 return true;
             } else if (getActive()) {

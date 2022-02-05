@@ -121,4 +121,7 @@ public class Voting {
     private static void progressDay(Server s) {
         Objects.requireNonNull(s.getWorld("world")).setTime(1000);
     }
+    public static long getTime() {
+        return Objects.requireNonNull(Bukkit.getServer().getWorld("world")).getTime();
+    }
 }
