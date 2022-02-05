@@ -15,7 +15,6 @@ import org.bukkit.entity.Player;
 public class CommandVS implements CommandExecutor {
     private static boolean active = false;
 
-
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (label.equalsIgnoreCase("vs")) {
@@ -47,7 +46,7 @@ public class CommandVS implements CommandExecutor {
     public static boolean getActive() {
         return active;
     }
-    public static void setActive(boolean b) {
-        CommandVS.active = b;
+    public static void setActive(boolean active) {
+        CommandVS.active = active;
     }
 }

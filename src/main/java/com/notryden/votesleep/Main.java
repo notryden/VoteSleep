@@ -10,9 +10,12 @@ import java.util.Objects;
 
 public final class Main extends JavaPlugin {
 
+    private static Main instance;
+
     @Override
     public void onEnable() {
         // Plugin startup logic
+        instance = this;
         Objects.requireNonNull(this.getCommand("vs")).setExecutor(new CommandVS());
         Objects.requireNonNull(this.getCommand("vsbroadcast")).setExecutor(new CommandVSBroadcast());
         Objects.requireNonNull(this.getCommand("vsaccept")).setExecutor(new CommandVSAccept());
@@ -22,5 +25,9 @@ public final class Main extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+    }
+
+    public static Main getInstance() {
+        return instance;
     }
 }

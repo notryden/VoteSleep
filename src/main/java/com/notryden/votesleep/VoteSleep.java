@@ -1,4 +1,7 @@
 package com.notryden.votesleep;
+/*
+ * USE Voting INSTEAD OF THIS! THIS DOESN'T WORK!
+ */
 
 import com.notryden.votesleep.commands.CommandVS;
 import net.md_5.bungee.api.ChatColor;
@@ -17,13 +20,13 @@ public class VoteSleep {
     static int playerDenyCount = 0;
 
 
-    public static void accept(String uuid) {
-        Player player = Bukkit.getPlayer(UUID.fromString(uuid));
+    public static void accept(String name) {
+        Player player = Bukkit.getPlayer(name);
         System.out.println(player);
-        playerListVoted.put(uuid, false);
-        if (!playerListVoted.get(uuid) && CommandVS.getActive() && !hasVotePassed) {
-            if (!playerListVoted.get(uuid))
-                playerListVoted.put(uuid, Boolean.TRUE);
+        playerListVoted.put(name, false);
+        if (!playerListVoted.get(name) && CommandVS.getActive() && !hasVotePassed) {
+            if (!playerListVoted.get(name))
+                playerListVoted.put(name, Boolean.TRUE);
             playerAcceptCount++;
             assert player != null;
             player.sendMessage(ChatColor.AQUA + "Vote submitted.");
@@ -31,8 +34,8 @@ public class VoteSleep {
                 ChatColor.GREEN + Integer.toString(playerAcceptCount) + ChatColor.RESET + "/"
                 + ChatColor.RED + playerDenyCount + ChatColor.RESET + "/" +
                 ChatColor.LIGHT_PURPLE + playerPassedCountMax);
-            System.out.println(playerListVoted.get(uuid));
-            System.out.println(!(playerListVoted.get(uuid)));
+            System.out.println(playerListVoted.get(name));
+            System.out.println(!(playerListVoted.get(name)));
             System.out.println(playerListVoted);
             if (playerAcceptCount == playerPassedCountMin) {
                 CommandVS.setActive(false);
@@ -58,12 +61,12 @@ public class VoteSleep {
             player.sendMessage(ChatColor.DARK_RED + "Vote has not started!");
         }
     }
-    public static void deny(String uuid) {
-        Player player = Bukkit.getPlayer(UUID.fromString(uuid));
-        playerListVoted.put(uuid, false);
-        if (!playerListVoted.get(uuid) && CommandVS.getActive() && !hasVotePassed) {
-            if (!playerListVoted.get(uuid))
-                playerListVoted.put(uuid, Boolean.TRUE);
+    public static void deny(String name) {
+        Player player = Bukkit.getPlayer(name);
+        playerListVoted.put(name, false);
+        if (!playerListVoted.get(name) && CommandVS.getActive() && !hasVotePassed) {
+            if (!playerListVoted.get(name))
+                playerListVoted.put(name, Boolean.TRUE);
             playerDenyCount++;
             assert player != null;
             player.sendMessage(ChatColor.AQUA + "Vote submitted.");
