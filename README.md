@@ -7,3 +7,6 @@ Usage:
 * /vs - (V)ote(S)leep command. Use this to start the vote.
 * /vsaccept - Accept the vote to sleep.
 * /vsdeny - Deny the vote to sleep
+
+TODO:
+* Remove player vote if they leave before the vote ends
