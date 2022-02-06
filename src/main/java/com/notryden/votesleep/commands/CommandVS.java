@@ -11,18 +11,20 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("deprecation")
 public class CommandVS implements CommandExecutor {
     private static boolean active = false;
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, String label, String[] args) {
         if (label.equalsIgnoreCase("vs")) {
             if (!(sender instanceof Player)) {
                 Bukkit.getLogger().warning("The server console cannot vote.");
                 return true;
             } else if (Voting.getTime() >= 13000 && !getActive()) {
-                Player player = (Player) sender;
+                Voting.voteTimer();
                 TextComponent vsMessage = new TextComponent("Click to begin sleeping vote!");
                 vsMessage.setBold(true);
                 vsMessage.setColor(ChatColor.GOLD);

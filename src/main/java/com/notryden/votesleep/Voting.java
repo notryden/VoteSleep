@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 
@@ -15,6 +16,7 @@ public class Voting {
     private static int playerDenyCount = 0;
     private static int playerPassCountMax = getPlayerCount();
     private static int playerPassCountMin = (int) Math.ceil((playerPassCountMax + 1) * 0.5);
+    static BukkitTask runnable;
 
     public void accept(String name) {
         if (!Voting.hasPlayerVoted(name) && CommandVS.getActive()) {
@@ -36,8 +38,16 @@ public class Voting {
             broadcastVoteNotStarted(name);
         }
     }
+    public static void voteTimer() {
+        assert runnable != null;
+        runnable = new BukkitRunnable() {
+            @Override
+            public void run() {
+                cancelVote();
+            }
+        }.runTaskLater(Main.getInstance(), 300L);
+    }
     private void vote(String name) {
-        Voting voteTimer = new Voting();
         listOfVotingPlayers.add(name);
         broadcastVoteCount();
         if (playerAcceptCount == playerPassCountMin) {
@@ -45,34 +55,24 @@ public class Voting {
             progressDay(Bukkit.getServer());
             CommandVS.setActive(false);
             listOfVotingPlayers.clear();
-            playerAcceptCount = 0;
-            playerDenyCount = 0;
-
+            resetPlayerCount();
+            resetPlayerVoteCount();
+            runnable.cancel();
         }
         if (playerDenyCount == playerPassCountMin) {
             broadcastVoteNotPassed(name);
             CommandVS.setActive(false);
             listOfVotingPlayers.clear();
-            playerAcceptCount = 0;
-            playerDenyCount = 0;
+            resetPlayerCount();
+            resetPlayerVoteCount();
+            runnable.cancel();
         }
-        voteTimer();
     }
-    public void voteTimer() {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (CommandVS.getActive())
-                    cancelVote();
-                else {
-                    this.cancel();
-                }
-            }
-        }.runTaskLater(Main.getInstance(), 300L);
-    }
-    private void cancelVote() {
+    private static void cancelVote() {
         listOfVotingPlayers.clear();
         CommandVS.setActive(false);
+        resetPlayerCount();
+        resetPlayerVoteCount();
         broadcastVoteFailed();
     }
 
@@ -117,5 +117,13 @@ public class Voting {
     }
     public static long getTime() {
         return Objects.requireNonNull(Bukkit.getServer().getWorld("world")).getTime();
+    }
+    private static void resetPlayerCount() {
+        playerPassCountMax = getPlayerCount();
+        playerPassCountMin = (int) Math.ceil((playerPassCountMax + 1) * 0.5);
+    }
+    private static void resetPlayerVoteCount() {
+        playerAcceptCount = 0;
+        playerDenyCount = 0;
     }
 }

@@ -11,11 +11,13 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("deprecation")
 public class CommandVSBroadcast implements CommandExecutor  {
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, String label, String[] args) {
         if (label.equalsIgnoreCase("vsbroadcast") && Voting.getTime() >= 13000) {
             if (sender instanceof Player) {
                 Player player = (Player) sender;
@@ -39,7 +41,8 @@ public class CommandVSBroadcast implements CommandExecutor  {
                 player.spigot().sendMessage(denyMessage);
 
                 return true;
-            } else if (!(sender instanceof Player)) {
+            }
+            if (!(sender instanceof Player)) {
                 Bukkit.getLogger().warning("The server console cannot vote.");
                 return true;
             }
