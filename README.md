@@ -5,6 +5,8 @@ This plugin is archived because:
 1. I don't care about it, and
 2. It doesn't work
 
+Original Description:
+
 A no-configuration plugin that sets the time to day with a vote.
 
 Usage:
